@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<title>Avinhão</title>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+	<link href="bower_components/angular-material/angular-material.css" type="text/css" rel="stylesheet" />
+	<link href="assets/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+	<div ng-controller="indexCtrl" layout="column">
+		<div layout="column">
+			<md-content class="md-padding">
+				<md-nav-bar nav-bar-aria-label="navigation links">
+					<md-nav-item md-nav-href="#/comando" name="comando">Centro de comando</md-nav-item>
+					<md-nav-item md-nav-href="#/report" name="report">Report</md-nav-item>
+					<md-nav-item md-nav-click="goto('page3')" name="page3">Em construção</md-nav-item>
+				</md-nav-bar>
+			</md-content>
+
+			<div layout="row" layout-align="start start">
+				<div flex="50">
+					<ui-view></ui-view>
+				</div>
+				<div>
+					<canvas id="canvas" width="640" height="480"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--<footer class="page-footer orange">
+	</footer>-->
+	<!--  Scripts-->
+	<!--<script src="bower_components/jQuery/dist/jquery.js"></script>-->
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-material/angular-material.min.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+	<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+	<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+	<script src="app/app.js"></script>
+	<script src="app/routes.js"></script>
+	<script src="app/components/index/index.controller.js"></script>
+	<script src="app/components/comando/comando.controller.js"></script>
+
+</body>
+
+</html>

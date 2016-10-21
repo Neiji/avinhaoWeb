@@ -1,0 +1,42 @@
+<div ng-controller="comandoCtrl" layout="column" layout-align=" none">
+    <div layout="row" layout-align="start center">
+        <div flex="30">
+            <md-radio-group ng-model="avinhao.coordenadas" ng-change="onSelectRadio(avinhao.coordenadas)">
+                <md-radio-button value="cartesiana" ng-selected="true">Cartesiana</md-radio-button>
+            </md-radio-group>
+        </div>
+        <div>
+            <md-input-container style="width: 80px;">
+                <label>X</label>
+                <input name="x" ng-model="avinhao.x" id="x">
+
+            </md-input-container>
+            <md-input-container style="width: 80px;">
+                <label>Y</label>
+                <input name="y" ng-model="avinhao.y" id="y">
+            </md-input-container>
+        </div>
+
+    </div>
+    <div layout="row" layout-align="start center">
+        <div flex="30">
+            <md-radio-group ng-model="avinhao.coordenadas" ng-change="onSelectRadio(avinhao.coordenadas)">
+                <md-radio-button value="polar">Polar</md-radio-button>
+            </md-radio-group>
+        </div>
+        <div>
+            <md-input-container style="width: 80px">
+                <label>R</label>
+                <input name="raio" ng-model="avinhao.raio" id="raio">
+            </md-input-container>
+            <md-input-container style="width: 80px">
+                <label>&prop;</label>
+                <input name="angulo" ng-model="avinhao.angulo" id="angulo">
+            </md-input-container>
+        </div>
+    </div>
+
+    <div style="width: 100px">
+        <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); color: rgb(255, 255, 255);" ng-click="onAdicionaAvinhao()">Adicionar</md-button>
+    </div>
+</div>

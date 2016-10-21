@@ -1,0 +1,12 @@
+{
+  "name": "newLife",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.15.2",
+    "express": "~4.14.0",
+    "request": "2.74.0",
+    "util": "0.10.3",
+    "bower": "~1.7.9",
+    "morgan": "~1.7.0"
+  }
+}
