@@ -1,4 +1,4 @@
-var app = angular.module("myApp", ['ngMaterial', 'ui.router'])
+var app = angular.module("myApp", ['ngMaterial', 'ui.router', 'smart-table'])
     .config(function ($mdThemingProvider) {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
@@ -6,17 +6,3 @@ var app = angular.module("myApp", ['ngMaterial', 'ui.router'])
                 'default': '500'
             });
     });
-
-
-// .config(function myAppConfig($routeProvider) {
-//     'use strict';
-//     $routeProvider
-//         .when('/login', {
-//             template: 'Oii'
-//             controller: 'components/login/login.controller.js'
-//         })
-//         .when('/', {
-//             templateUrl: '../index.html'
-//         })
-//         .otherwise({ redirectTo: '/' });
-// });

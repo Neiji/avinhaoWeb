@@ -1,5 +1,6 @@
 app.controller('indexCtrl', function ($scope) {
 
+    $scope.currentNavItem = 'comando';
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
     var centroX = canvas.width / 2;

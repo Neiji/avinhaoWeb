@@ -3,30 +3,35 @@
 
 <head>
 	<title>Avinhão</title>
-
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
 	<link href="bower_components/angular-material/angular-material.css" type="text/css" rel="stylesheet" />
-	<link href="assets/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="assets/css/style.css" type="text/css" rel="stylesheet" />
+	<style>
+
+	</style>
 </head>
 
 <body>
 	<div ng-controller="indexCtrl" layout="column">
 		<div layout="column">
-			<md-content class="md-padding">
-				<md-nav-bar nav-bar-aria-label="navigation links">
-					<md-nav-item md-nav-href="#/comando" name="comando">Centro de comando</md-nav-item>
+			<md-content>
+				<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+					<img src="assets/images/Corki_HotRod_Render.png" />
+					<md-nav-item md-nav-href="#/comando" id="comando" name="comando1">Centro de comando</md-nav-item>
 					<md-nav-item md-nav-href="#/report" name="report">Report</md-nav-item>
 					<md-nav-item md-nav-click="goto('page3')" name="page3">Em construção</md-nav-item>
 				</md-nav-bar>
 			</md-content>
-
 			<div layout="row" layout-align="start start">
 				<div flex="50">
 					<ui-view></ui-view>
 				</div>
-				<div>
-					<canvas id="canvas" width="640" height="480"></canvas>
+				<div layout="column" layout-align="end">
+					<div>
+						<canvas id="canvas" width="640" height="480"></canvas>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -41,12 +46,11 @@
 	<script src="bower_components/angular-aria/angular-aria.min.js"></script>
 	<script src="bower_components/angular-messages/angular-messages.min.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-
+	<script src="bower_components/angular-smart-table/dist/smart-table.min.js"></script>
 	<script src="app/app.js"></script>
 	<script src="app/routes.js"></script>
 	<script src="app/components/index/index.controller.js"></script>
 	<script src="app/components/comando/comando.controller.js"></script>
-
 </body>
 
 </html>

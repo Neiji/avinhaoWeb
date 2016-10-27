@@ -1,4 +1,5 @@
-app.controller('comandoCtrl', function ($scope) {
+app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
+
     $scope.onSelectRadio = function (coordenadas) {
         if (coordenadas === 'cartesiana') {
             document.getElementById('raio').disabled = true;
@@ -28,6 +29,35 @@ app.controller('comandoCtrl', function ($scope) {
         if (this.avinhao) {
             if (this.avinhao.x && this.avinhao.y) {
                 this.setAvinhaoMapa(this.avinhao.x, this.avinhao.y);
+                var raioPorXY = calculaRaio(this.avinhao.x, this.avinhao.y);
+                this.addRow({
+                    X: this.avinhao.x,
+                    Y: this.avinhao.y,
+                    Raio: raioPorXY
+                });
+            } else if (this.avinhao.raio && this.avinhao.angulo) {
+                //Precisamos então transformar as coordenadas polares em cartesianas antes de setarmos no mapa.
+                var raio = Number(this.avinhao.raio);
+                var angulo = Number(this.avinhao.angulo);
+
+                angulo = degreesToRadians(angulo);
+
+                var sinAngulo = Math.sin(angulo);
+                var cosAngulo = Math.cos(angulo);
+                console.table(sinAngulo, cosAngulo);
+
+                var novoX = cosAngulo * raio;
+                var novoY = sinAngulo * raio;
+
+                //Adicionamos os  valores na grade de exibição
+                this.addRow({
+                    Raio: this.avinhao.raio,
+                    Angulo: this.avinhao.angulo,
+                    X: parseFloat(novoX.toFixed(2)),
+                    Y: parseFloat(novoY.toFixed(2))
+                });
+                //Setamos os valores nos mapas
+                this.setAvinhaoMapa(novoX, novoY);
             }
         }
     }
@@ -65,4 +95,44 @@ app.controller('comandoCtrl', function ($scope) {
         };
 
     }
-})
+
+    $scope.moverAvinhao = function (avinhao) {
+
+    }
+
+    function degreesToRadians(graus) {
+        return (graus * Math.PI) / 180;
+    }
+
+    $scope.startPage = function () {
+        return true;
+    }
+
+    $scope.rowSelected = function (e) {
+        if (e.isSelected == true) {
+            console.log(e);
+        }
+    };
+
+    $scope.addRow = function (row) {
+        $scope.rowCollection.push(row);
+    };
+
+    $scope.inicializarCampos = function () {
+        $scope.rowCollection = [];
+        $scope.avinhao = {};
+        $scope.avinhao.coordenadas = "cartesiana";
+    };
+
+    //Função responsável por calcular o raio após inserida uma coordenada de x e y
+    function calculaRaio(x, y){
+        //Fórmula de calcular o raio
+        //r² = x² + y²
+        var cartesiana = (x * x) + (y * y);
+        var raio = Math.sqrt(cartesiana);
+        console.log(raio);
+
+        return raio;
+    }
+
+}]);
