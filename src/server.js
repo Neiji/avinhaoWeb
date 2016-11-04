@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var morgan = require('morgan');
+//var morgan = require('morgan');
 var rotas = require('./config/rotas');
 var port = process.env.PORT || 8080;
 var path = require('path');
@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // log to console
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 app.use(express.static('./public'));
 
 // Start the server
@@ -24,6 +24,6 @@ var apiRoutes = express.Router();
 rotas.addViews(__dirname, app);
 
 // connect the api routes under /api/*
-rotas.addRotas(apiRoutes);
+// rotas.addRotas(apiRoutes);
 
 app.use('/api', apiRoutes);
