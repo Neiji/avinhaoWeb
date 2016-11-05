@@ -30,10 +30,12 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             if (this.avinhao.x && this.avinhao.y) {
                 this.setAvinhaoMapa(this.avinhao.x, this.avinhao.y);
                 var raioPorXY = calculaRaio(this.avinhao.x, this.avinhao.y);
+                var anguloXY = calculaAngulo(this.avinhao.x, this.avinhao.y);
                 this.addRow({
                     X: this.avinhao.x,
                     Y: this.avinhao.y,
-                    Raio: raioPorXY
+                    Raio: raioPorXY,
+                    Angulo: anguloXY
                 });
             } else if (this.avinhao.raio && this.avinhao.angulo) {
                 //Precisamos então transformar as coordenadas polares em cartesianas antes de setarmos no mapa.
@@ -133,6 +135,22 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         console.log(raio);
 
         return raio;
+    }
+
+    //Função responsável por calcular o Angulo, a partir do X e Y
+    function calculaAngulo(x, y) {
+        var pi = Math.atan2(y, x);
+        var angulo =  pi * (180 / Math.PI);
+        console.log(angulo);
+        if(angulo < 0){
+            angulo = Number(angulo) + 360;
+            console.log("calculando por -90");
+        }
+        // else if(angulo > -90 && angulo < 0) {
+        //     angulo = (Number(angulo) +360;
+        //     console.log("calculando por -270");
+        // }
+        return Math.abs(angulo);
     }
 
 }]);
