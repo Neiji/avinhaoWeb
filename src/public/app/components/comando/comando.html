@@ -1,40 +1,72 @@
 <div ng-controller="comandoCtrl" layout="column" layout-align=" none" ng-init="inicializarCampos();">
     <div layout="row" layout-align="start top" style="margin-top: 30px; height: 40px;">
         <div style="width: 105px;" flex="30">
-            <md-radio-group ng-model="avinhao.coordenadas" ng-init="cartesiana" style="width:30px;" ng-change="onSelectRadio(avinhao.coordenadas)">
+            <md-radio-group ng-model="avinhao.Coordenadas" ng-init="cartesiana" style="width:30px;" ng-change="onSelectRadio(avinhao.coordenadas)">
                 <md-radio-button value="cartesiana">Cartesiana</md-radio-button>
             </md-radio-group>
         </div>
         <md-input-container style="width: 80px; margin-top:-10px;">
             <label>X</label>
-            <input name="x" ng-model="avinhao.x" id="x">
+            <input name="x" ng-model="avinhao.X" id="x">
         </md-input-container>
         <md-input-container style="width: 80px; margin-top:-10px;">
             <label>Y</label>
-            <input name="y" ng-model="avinhao.y" id="y">
+            <input name="y" ng-model="avinhao.Y" id="y">
         </md-input-container>
     </div>
     <div layout="row" layout-align="start top" style="margin-top: 15px">
         <div flex="30">
-            <md-radio-group ng-model="avinhao.coordenadas" ng-change="onSelectRadio(avinhao.coordenadas)">
+            <md-radio-group ng-model="avinhao.Coordenadas" ng-change="onSelectRadio(avinhao.coordenadas)">
                 <md-radio-button value="polar">Polar</md-radio-button>
             </md-radio-group>
         </div>
         <div>
             <md-input-container style="width: 80px; margin-top: -13px">
                 <label>R</label>
-                <input name="raio" ng-model="avinhao.raio" id="raio">
+                <input name="raio" ng-model="avinhao.Raio" id="raio">
             </md-input-container>
             <md-input-container style="width: 80px; margin-top: -13px">
                 <label>&prop;</label>
-                <input name="angulo" ng-model="avinhao.angulo" id="angulo">
+                <input name="angulo" ng-model="avinhao.Angulo" id="angulo">
             </md-input-container>
         </div>
     </div>
-    <div style="width: 100px">
-        <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); color: rgb(255, 255, 255);" ng-click="onAdicionaAvinhao()">Adicionar</md-button>
+    <div layout="row" layout-align="start top" style="margin-top: 15px" flex="30">
+            <md-input-container style="width: 80px; margin-top: -13px">
+                <label>Velocidade</label>
+                <input name="raio" ng-model="avinhao.Velocidade" id="velocidade">
+            </md-input-container>
+            <md-input-container style="width: 80px; margin-top: -13px">
+                <label>Direção</label>
+                <input name="angulo" ng-model="avinhao.Direcao" id="direcao">
+            </md-input-container>
     </div>
-    <div>
+    <div style="width: 100px">
+        <md-button class="md-raised md-default" style="background: rgb(76, 175, 80);" ng-click="onAdicionaAvinhao()">Adicionar</md-button>
+    </div>
+    <div layout="row" layout-align="start top" style="margin-top: 30px" flex="30">
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>X Mover</label>
+            <input name="XMover" ng-model="avinhao.XMover" id="XMover">
+        </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>Y Mover</label>
+            <input name="YMover" ng-model="avinhao.YMover" id="YMover">
+        </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>X Escala</label>
+            <input name="XEscala" ng-model="avinhao.XEscala" id="XEscala">
+        </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>Y Escala</label>
+            <input name="YEscala" ng-model="avinhao.YEscala" id="YEscala">
+        </md-input-container>
+    </div>
+    <div layout="row">
+    <md-button class="md-raised md-default" style="background: rgb(76, 175, 80);" ng-click="moverAvinhao()">Mover</md-button>
+    <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); width: 100px;" ng-click="onAdicionaAvinhao()">Escalonar</md-button>
+    </div>
+        <div>
         <table st-table="rowCollection" class="table table-bordered">
             <thead class="thead-inverse">
                 <tr>
