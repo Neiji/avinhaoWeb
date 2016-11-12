@@ -139,7 +139,7 @@ debugger;
             var ctx = canvas.getContext("2d");
             var centroCanvasX = canvas.width / 2;
             var centroCanvasY = canvas.height / 2;
-            if (Number(y) < 0) {
+            if (Number(avinhaoSelected.Y) < 0) {
                 avinhaoSelected.Y = Math.abs(Number(avinhaoSelected.Y));
             } else {
                 avinhaoSelected.Y = -Math.abs(Number(avinhaoSelected.Y));
