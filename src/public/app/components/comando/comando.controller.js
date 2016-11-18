@@ -1,8 +1,11 @@
 app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
 
+    //Variáveis globais da controler.
     avinhoes = [];
     avinhaoSelected = null;
 
+    //Seta um avião no mapa, este método é responsável por fazer uso das coordenadas x e y passadas por parâmetro para
+    //adicionar um novo avião no mapa.
     $scope.setAvinhaoMapa = function(x, y){
         if (Number(y) < 0) {
             y = Math.abs(Number(y));
@@ -18,7 +21,6 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         var centroCanvasX = canvas.width / 2;
         var centroCanvasY = canvas.height / 2;
         var radius = Math.floor(canvas.width / 3);
-debugger;
         //Desenho das linhas
         var begin = 0;
         intervalo = 90;
@@ -51,6 +53,7 @@ debugger;
 
     }
 
+    //Este método é apenas visual e é responsável por desabilitar os campos de angulo e raio ou x e y conforme seleção do usuário a respeito de qual coordenada o mesmo deseja utilizar.
     $scope.onSelectRadio = function (coordenadas) {
         if (coordenadas === 'cartesiana') {
             document.getElementById('raio').disabled = true;
@@ -76,6 +79,7 @@ debugger;
         }
     }
 
+    //Método que adiciona um novo avião para o usuário, conforme suas escolhas (Coordenadas cartesianas ou polares).
     $scope.onAdicionaAvinhao = function () {
         if (this.avinhao) {
 
@@ -131,6 +135,7 @@ debugger;
         }
     }
 
+    //Método responsável por mover um avião que foi previamente selecionado na tabela.
     $scope.moverAvinhao = function () {
         if(!avinhaoSelected || avinhaoSelected == null){
             alert("Você precisa selecionar um avião na tabela para mover.");
@@ -162,14 +167,12 @@ debugger;
         }
     }
 
+    //Método responsável por realizar a conversão de graus para radianos.
     function degreesToRadians(graus) {
         return (graus * Math.PI) / 180;
     }
 
-    $scope.startPage = function () {
-        return true;
-    }
-
+    //Evento disparado quando um avião é selecionado na tabela, este avião será usado ao tentar move-lo etc.
     $scope.rowSelected = function (e) {
         if (e.isSelected == true) {
             avinhaoSelected = e;
@@ -178,10 +181,12 @@ debugger;
         }
     };
 
+    //Método responsável por adicionar uma linha na tabela de informações sobre o avião
     $scope.addRow = function (row) {
         $scope.rowCollection.push(row);
     };
 
+    //Inicializamos algumas variáveis do projeto para que estejam disponíveis posteriormente
     $scope.inicializarCampos = function () {
         $scope.rowCollection = [];
         $scope.avinhao = {};
