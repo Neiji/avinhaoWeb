@@ -61,10 +61,24 @@
             <label>Y Escala</label>
             <input name="YEscala" ng-model="avinhao.YEscala" id="YEscala">
         </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>X Rotação</label>
+            <input name="XRotacao" ng-model="avinhao.XRotacao" id="XRotacao">
+        </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>Y Rotação</label>
+            <input name="YRotacao" ng-model="avinhao.YRotacao" id="YRotacao">
+        </md-input-container>
+        <md-input-container style="width: 80px; margin-top: -13px">
+            <label>Angulo Rotação</label>
+            <input name="AnguloRotacao" ng-model="avinhao.AnguloRotacao" id="AnguloRotacao">
+        </md-input-container>
     </div>
     <div layout="row">
     <md-button class="md-raised md-default" style="background: rgb(76, 175, 80);" ng-click="moverAvinhao()">Mover</md-button>
-    <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); width: 100px;" ng-click="onAdicionaAvinhao()">Escalonar</md-button>
+    <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); width: 100px;" ng-click="escalonar()">Escalonar</md-button>
+    <md-button class="md-raised md-default" style="background: rgb(76, 175, 80); width: 100px;" ng-click="rotacionar()">Rotacionar</md-button>
+
     </div>
         <div>
         <table st-table="rowCollection" class="table table-bordered">

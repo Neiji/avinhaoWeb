@@ -53,7 +53,8 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
 
     }
 
-    //Este método é apenas visual e é responsável por desabilitar os campos de angulo e raio ou x e y conforme seleção do usuário a respeito de qual coordenada o mesmo deseja utilizar.
+    //Este método é apenas visual e é responsável por desabilitar os campos de angulo e raio ou x e y conforme seleção
+    // do usuário a respeito de qual coordenada o mesmo deseja utilizar.
     $scope.onSelectRadio = function (coordenadas) {
         if (coordenadas === 'cartesiana') {
             document.getElementById('raio').disabled = true;
@@ -140,17 +141,22 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         if(!avinhaoSelected || avinhaoSelected == null){
             alert("Você precisa selecionar um avião na tabela para mover.");
         }else{
+            var y = avinhaoSelected.Y;
+            var x = avinhaoSelected.X;
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
             var centroCanvasX = canvas.width / 2;
             var centroCanvasY = canvas.height / 2;
-            if (Number(avinhaoSelected.Y) < 0) {
-                avinhaoSelected.Y = Math.abs(Number(avinhaoSelected.Y));
+            //Realizamos um tratamento para quando o Y for menor que 0, pois no canvas os valores positivos e negativos
+            //de Y são invertidos.
+            if (Number(y) < 0) {
+                y = Math.abs(Number(y));
             } else {
-                avinhaoSelected.Y = -Math.abs(Number(avinhaoSelected.Y));
+                y = -Math.abs(Number(y));
             }
-            var ajusteX = Math.floor(centroCanvasX + Number(avinhaoSelected.X));
-            var ajusteY = Math.floor(centroCanvasY + Number(avinhaoSelected.Y));
+
+            var ajusteX = Math.floor(centroCanvasX + Number(x));
+            var ajusteY = Math.floor(centroCanvasY + Number(y));
 
             //Aqui, nós inicializamos a imagem de um avião para obter suas medidas
             var img = new Image();
@@ -160,9 +166,13 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 var centroImgY = img.height / 2;
                 var imgX = Math.floor(ajusteX - centroImgX)
                 var imgY = Math.floor(ajusteY - centroImgY);
-                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o aviao antigo
+                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o
+                // aviao antigo
                 ctx.fillRect(imgX, imgY, 50, 30);
                 $scope.setAvinhaoMapa($scope.avinhao.XMover, $scope.avinhao.YMover);
+                //Por fim, setamos os novos valores de X e Y na tabela
+                avinhaoSelected.X = $scope.avinhao.XMover;
+                avinhaoSelected.Y = $scope.avinhao.YMover;
             }
         }
     }
@@ -218,6 +228,112 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         //     console.log("calculando por -270");
         // }
         return Math.abs(angulo);
+    }
+
+    $scope.escalonar = function(){
+        if(!avinhaoSelected || avinhaoSelected == null){
+            alert("Você precisa selecionar um avião na tabela para mover.");
+        }else{
+            var y = avinhaoSelected.Y;
+            var x = avinhaoSelected.X;
+
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var centroCanvasX = canvas.width / 2;
+            var centroCanvasY = canvas.height / 2;
+            //Realizamos um tratamento para quando o Y for menor que 0, pois no canvas os valores positivos e negativos
+            //de Y são invertidos.
+            if (Number(y) < 0) {
+                y = Math.abs(Number(y));
+            } else {
+                y = -Math.abs(Number(y));
+            }
+
+            var ajusteX = Math.floor(centroCanvasX + Number(x));
+            var ajusteY = Math.floor(centroCanvasY + Number(y));
+
+            //Aqui, nós inicializamos a imagem de um avião para obter suas medidas
+            var img = new Image();
+            img.src = "../../../assets/images/avinhao.png";
+            img.onload = function () {
+                var centroImgX = img.width / 2;
+                var centroImgY = img.height / 2;
+                var imgX = Math.floor(ajusteX - centroImgX)
+                var imgY = Math.floor(ajusteY - centroImgY);
+                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o
+                // aviao antigo
+                ctx.fillRect(imgX, imgY, 50, 30);
+                //Pegamos o valor puro de Y, pois para os calculos, não precisamos do tratamento para o canvas
+                var escalarX =  x * (Number($scope.avinhao.XEscala) / 100);
+                var escalarY =  Number(avinhaoSelected.Y) * (Number($scope.avinhao.YEscala) / 100);
+                $scope.setAvinhaoMapa(escalarX, escalarY);
+                //Por fim, setamos os novos valores de X e Y na tabela
+                avinhaoSelected.X = escalarX;
+                avinhaoSelected.Y = escalarY;
+                avinhaoSelected.Angulo = calculaAngulo(escalarX, escalarY);
+                avinhaoSelected.Raio = calculaRaio(escalarX, escalarY);
+            }
+        }
+    }
+
+    $scope.rotacionar = function(){
+        if(!avinhaoSelected || avinhaoSelected == null){
+            alert("Você precisa selecionar um avião na tabela para rotacionar.");
+        }else{
+            debugger;
+            var xTarget = Number(avinhaoSelected.X);
+            var yTarget = Number(avinhaoSelected.Y);
+
+            //Valores necessário para realizar o calculo da rotação
+            var xRotacionar = Number($scope.avinhao.XRotacao);
+            var yRotacionar = Number($scope.avinhao.YRotacao);
+            var anguloRotacionar = degreesToRadians(Number($scope.avinhao.AnguloRotacao));
+
+            var xDif = xTarget - xRotacionar;
+            var yDif = yTarget - yRotacionar;
+
+            var xNew = (xTarget * Math.cos(anguloRotacionar)) + (yTarget * - Math.sin(anguloRotacionar));
+            var yNew = (xTarget * Math.sin(anguloRotacionar)) + (yTarget * Math.cos(anguloRotacionar));
+
+            xNew = Math.round(xNew);
+            yNew = Math.round(yNew);
+
+
+            // xNew = xNew + xDif;
+            // yNew = yNew + yDif;
+
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var centroCanvasX = canvas.width / 2;
+            var centroCanvasY = canvas.height / 2;
+            //Realizamos um tratamento para quando o Y for menor que 0, pois no canvas os valores positivos e negativos
+            //de Y são invertidos.
+            if (Number(avinhaoSelected.Y) < 0) {
+                yTarget = Math.abs(Number(yTarget));
+            } else {
+                yTarget = -Math.abs(Number(yTarget));
+            }
+
+            var ajusteX = Math.floor(centroCanvasX + Number(xTarget));
+            var ajusteY = Math.floor(centroCanvasY + Number(yTarget));
+
+            //Aqui, nós inicializamos a imagem de um avião para obter suas medidas
+            var img = new Image();
+            img.src = "../../../assets/images/avinhao.png";
+            img.onload = function () {
+                var centroImgX = img.width / 2;
+                var centroImgY = img.height / 2;
+                var imgX = Math.floor(ajusteX - centroImgX)
+                var imgY = Math.floor(ajusteY - centroImgY);
+                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o
+                // aviao antigo
+                ctx.fillRect(imgX, imgY, 50, 30);
+                $scope.setAvinhaoMapa(xNew, yNew);
+                //Por fim, setamos os novos valores de X e Y na tabela
+                avinhaoSelected.X = xNew;
+                avinhaoSelected.Y = yNew;
+            }
+        }
     }
 
 }]);
