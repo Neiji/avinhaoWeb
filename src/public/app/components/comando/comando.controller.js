@@ -292,15 +292,14 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             var xDif = xTarget - xRotacionar;
             var yDif = yTarget - yRotacionar;
 
-            var xNew = (xTarget * Math.cos(anguloRotacionar)) + (yTarget * - Math.sin(anguloRotacionar));
-            var yNew = (xTarget * Math.sin(anguloRotacionar)) + (yTarget * Math.cos(anguloRotacionar));
+            var ajusteX = xDif + xRotacionar;
+            var ajusteY = yDif + yRotacionar;
+
+            var xNew = (ajusteX * Math.cos(anguloRotacionar)) + (ajusteY * - Math.sin(anguloRotacionar));
+            var yNew = (ajusteX * Math.sin(anguloRotacionar)) + (ajusteY * Math.cos(anguloRotacionar));
 
             xNew = Math.round(xNew);
             yNew = Math.round(yNew);
-
-
-            // xNew = xNew + xDif;
-            // yNew = yNew + yDif;
 
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
