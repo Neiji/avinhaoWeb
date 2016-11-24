@@ -105,7 +105,8 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                     X: this.avinhao.X,
                     Y: this.avinhao.Y,
                     Raio: raioPorXY,
-                    Angulo: anguloXY
+                    Angulo: anguloXY,
+                    Velocidade: this.avinhao.Velocidade
                 });
             } else if (this.avinhao.Raio && this.avinhao.Angulo) {
                 //Precisamos então transformar as coordenadas polares em cartesianas antes de setarmos no mapa.

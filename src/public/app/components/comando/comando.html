@@ -70,7 +70,7 @@
             <input name="YRotacao" ng-model="avinhao.YRotacao" id="YRotacao">
         </md-input-container>
         <md-input-container style="width: 80px; margin-top: -13px">
-            <label>Angulo Rotação</label>
+            <label>&prop; Rotação</label>
             <input name="AnguloRotacao" ng-model="avinhao.AnguloRotacao" id="AnguloRotacao">
         </md-input-container>
     </div>
@@ -89,6 +89,7 @@
                     <th st-sort="Y">Y</th>
                     <th st-sort="Raio">Raio</th>
                     <th st-sort="Angulo">Angulo</th>
+                    <th st-sort="Velocidade">Velocidade</th>
                 </tr>
             </thead>
             <tbody class="table table-striped">
@@ -98,6 +99,7 @@
                     <td class="text-center" >{{row.Y}}</td>
                     <td class="text-center" >{{row.Raio}}</td>
                     <td class="text-center" >{{row.Angulo}}</td>
+                    <td class="text-center" >{{row.Velocidade}}</td>
                 </tr>
             </tbody>
         </table>
