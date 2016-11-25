@@ -6,7 +6,7 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
 
     //Seta um avião no mapa, este método é responsável por fazer uso das coordenadas x e y passadas por parâmetro para
     //adicionar um novo avião no mapa.
-    $scope.setAvinhaoMapa = function(x, y){
+    $scope.setAvinhaoMapa = function (x, y) {
         if (Number(y) < 0) {
             y = Math.abs(Number(y));
         } else {
@@ -84,13 +84,13 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     $scope.onAdicionaAvinhao = function () {
         if (this.avinhao) {
 
-            for(var i = 0; i < avinhoes.length; i++){
+            for (var i = 0; i < avinhoes.length; i++) {
                 //Estas variáveis foram transformadas em Number, pois as mesmas veem como string da View
                 //O Javascript não nos permite realizar somas entre numeros e strings, nos retornando erro de calculo
                 var avinhaoAddX = Number(this.avinhao.X);
                 var avinhaoAddY = Number(this.avinhao.Y);
-                if((avinhaoAddX <= Number(avinhoes[i].X) +50 &&  avinhaoAddX  >= Number(avinhoes[i].X) -50)
-                    && (avinhaoAddY <= Number(avinhoes[i].Y) +30 && avinhaoAddY >= Number(avinhoes[i].Y) -30)){
+                if ((avinhaoAddX <= Number(avinhoes[i].X) + 50 && avinhaoAddX >= Number(avinhoes[i].X) - 50) &&
+                    (avinhaoAddY <= Number(avinhoes[i].Y) + 30 && avinhaoAddY >= Number(avinhoes[i].Y) - 30)) {
                     //Cancelamos a ação de adicionar o avião, caso o mesmo esteja fora de uma distancia segura do anteriormente adicionado.
                     alert("Você precisa adicionar um avião a uma distância segura do outro.");
                     return;
@@ -139,9 +139,9 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
 
     //Método responsável por mover um avião que foi previamente selecionado na tabela.
     $scope.moverAvinhao = function () {
-        if(!avinhaoSelected || avinhaoSelected == null){
+        if (!avinhaoSelected || avinhaoSelected == null) {
             alert("Você precisa selecionar um avião na tabela para mover.");
-        }else{
+        } else {
             var y = avinhaoSelected.Y;
             var x = avinhaoSelected.X;
             var canvas = document.getElementById("canvas");
@@ -187,7 +187,7 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     $scope.rowSelected = function (e) {
         if (e.isSelected == true) {
             avinhaoSelected = e;
-        }else{
+        } else {
             avinhaoSelected = null;
         }
     };
@@ -205,7 +205,7 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     };
 
     //Função responsável por calcular o raio após inserida uma coordenada de x e y
-    function calculaRaio(x, y){
+    function calculaRaio(x, y) {
         //Fórmula de calcular o raio
         //r² = x² + y²
         var cartesiana = (x * x) + (y * y);
@@ -218,23 +218,17 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     //Função responsável por calcular o Angulo, a partir do X e Y
     function calculaAngulo(x, y) {
         var pi = Math.atan2(y, x);
-        var angulo =  pi * (180 / Math.PI);
-        //console.log(angulo);
-        if(angulo < 0){
+        var angulo = pi * (180 / Math.PI);
+        if (angulo < 0) {
             angulo = Number(angulo) + 360;
-            //console.log("calculando por -90");
         }
-        // else if(angulo > -90 && angulo < 0) {
-        //     angulo = (Number(angulo) +360;
-        //     console.log("calculando por -270");
-        // }
         return Math.abs(angulo);
     }
 
-    $scope.escalonar = function(){
-        if(!avinhaoSelected || avinhaoSelected == null){
+    $scope.escalonar = function () {
+        if (!avinhaoSelected || avinhaoSelected == null) {
             alert("Você precisa selecionar um avião na tabela para mover.");
-        }else{
+        } else {
             var y = avinhaoSelected.Y;
             var x = avinhaoSelected.X;
 
@@ -265,8 +259,8 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 // aviao antigo
                 ctx.fillRect(imgX, imgY, 50, 30);
                 //Pegamos o valor puro de Y, pois para os calculos, não precisamos do tratamento para o canvas
-                var escalarX =  x * (Number($scope.avinhao.XEscala) / 100);
-                var escalarY =  Number(avinhaoSelected.Y) * (Number($scope.avinhao.YEscala) / 100);
+                var escalarX = x * (Number($scope.avinhao.XEscala) / 100);
+                var escalarY = Number(avinhaoSelected.Y) * (Number($scope.avinhao.YEscala) / 100);
                 $scope.setAvinhaoMapa(escalarX, escalarY);
                 //Por fim, setamos os novos valores de X e Y na tabela
                 avinhaoSelected.X = escalarX;
@@ -277,10 +271,10 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         }
     }
 
-    $scope.rotacionar = function(){
-        if(!avinhaoSelected || avinhaoSelected == null){
+    $scope.rotacionar = function () {
+        if (!avinhaoSelected || avinhaoSelected == null) {
             alert("Você precisa selecionar um avião na tabela para rotacionar.");
-        }else{
+        } else {
             debugger;
             var xTarget = Number(avinhaoSelected.X);
             var yTarget = Number(avinhaoSelected.Y);
@@ -288,19 +282,27 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             //Valores necessário para realizar o calculo da rotação
             var xRotacionar = Number($scope.avinhao.XRotacao);
             var yRotacionar = Number($scope.avinhao.YRotacao);
-            var anguloRotacionar = degreesToRadians(Number($scope.avinhao.AnguloRotacao));
+            var anguloRotacionar = degreesToRadians(Number($scope.avinhao.AnguloRotacao))
+            //$scope.avinhao.AnguloRotacao / (180 / Math.PI);
 
+            //Para calcularmos a rotação, precisamos subtrair o valor que temos pelo valor alvo
             var xDif = xTarget - xRotacionar;
             var yDif = yTarget - yRotacionar;
+            //Com esta diferença, podemos calcular a rotação a partir dela, assim teremos um novo ponto para x e y
+            var xNew = (xDif * Math.cos(anguloRotacionar)) + (-yDif * Math.sin(anguloRotacionar));
+            var yNew = (xDif * Math.sin(anguloRotacionar)) + (yDif * Math.cos(anguloRotacionar));
 
-            var ajusteX = xDif + xRotacionar;
-            var ajusteY = yDif + yRotacionar;
-
-            var xNew = (ajusteX * Math.cos(anguloRotacionar)) + (ajusteY * - Math.sin(anguloRotacionar));
-            var yNew = (ajusteX * Math.sin(anguloRotacionar)) + (ajusteY * Math.cos(anguloRotacionar));
+            //Após realizar o calculo e com os novos valores prontos, podemos então
+            //devolver  o valor de x e y pelos valores originais.
+            xNew = xNew + xRotacionar;
+            yNew = yNew + yRotacionar;
 
             xNew = Math.round(xNew);
             yNew = Math.round(yNew);
+
+            //Setamos os novos valores de X e Y na tabela
+            avinhaoSelected.X = xNew;
+            avinhaoSelected.Y = yNew;
 
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
@@ -329,9 +331,6 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 // aviao antigo
                 ctx.fillRect(imgX, imgY, 50, 30);
                 $scope.setAvinhaoMapa(xNew, yNew);
-                //Por fim, setamos os novos valores de X e Y na tabela
-                avinhaoSelected.X = xNew;
-                avinhaoSelected.Y = yNew;
             }
         }
     }
