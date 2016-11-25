@@ -56,12 +56,13 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     //Este método é apenas visual e é responsável por desabilitar os campos de angulo e raio ou x e y conforme seleção
     // do usuário a respeito de qual coordenada o mesmo deseja utilizar.
     $scope.onSelectRadio = function (coordenadas) {
+        debugger;
         if (coordenadas === 'cartesiana') {
             document.getElementById('raio').disabled = true;
             document.getElementById('angulo').disabled = true;
 
-            this.avinhao.raio = "";
-            this.avinhao.angulo = "";
+            this.avinhao.Raio = "";
+            this.avinhao.Angulo = "";
 
             document.getElementById('x').disabled = false;
             document.getElementById('y').disabled = false;
@@ -71,8 +72,8 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             document.getElementById('x').disabled = true;
             document.getElementById('y').disabled = true;
 
-            this.avinhao.x = "";
-            this.avinhao.y = "";
+            this.avinhao.X = "";
+            this.avinhao.Y = "";
 
             document.getElementById('raio').disabled = false;
             document.getElementById('angulo').disabled = false;
@@ -83,25 +84,30 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
     //Método que adiciona um novo avião para o usuário, conforme suas escolhas (Coordenadas cartesianas ou polares).
     $scope.onAdicionaAvinhao = function () {
         if (this.avinhao) {
-
-            for (var i = 0; i < avinhoes.length; i++) {
-                //Estas variáveis foram transformadas em Number, pois as mesmas veem como string da View
-                //O Javascript não nos permite realizar somas entre numeros e strings, nos retornando erro de calculo
-                var avinhaoAddX = Number(this.avinhao.X);
-                var avinhaoAddY = Number(this.avinhao.Y);
-                if ((avinhaoAddX <= Number(avinhoes[i].X) + 50 && avinhaoAddX >= Number(avinhoes[i].X) - 50) &&
-                    (avinhaoAddY <= Number(avinhoes[i].Y) + 30 && avinhaoAddY >= Number(avinhoes[i].Y) - 30)) {
-                    //Cancelamos a ação de adicionar o avião, caso o mesmo esteja fora de uma distancia segura do anteriormente adicionado.
-                    alert("Você precisa adicionar um avião a uma distância segura do outro.");
+            //Estas variáveis foram transformadas em Number, pois as mesmas veem como string da View
+            //O Javascript não nos permite realizar somas entre numeros e strings, nos retornando erro de calculo
+            if (this.avinhao.X && this.avinhao.Y) {
+                if (!isValidToAdd(this.avinhao.X, this.avinhao.Y))
                     return;
-                }
+            }
+            if (this.avinhao.Angulo && this.avinhao.Raio) {
+                var sinAngulo = Math.sin(angulo);
+                var cosAngulo = Math.cos(angulo);
+
+                var novoX = cosAngulo * raio;
+                var novoY = sinAngulo * raio;
+                if (novoX && novoY)
+                    if (!isValidToAdd(novoX, novoY))
+                        return;
             }
 
             if (this.avinhao.X && this.avinhao.Y) {
+
                 this.setAvinhaoMapa(this.avinhao.X, this.avinhao.Y);
                 var raioPorXY = calculaRaio(this.avinhao.X, this.avinhao.Y);
                 var anguloXY = calculaAngulo(this.avinhao.X, this.avinhao.Y);
                 this.addRow({
+                    Aviao: calculaProximidadeAeroporto(raioPorXY),
                     X: this.avinhao.X,
                     Y: this.avinhao.Y,
                     Raio: raioPorXY,
@@ -124,10 +130,12 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
 
                 //Adicionamos os  valores na grade de exibição
                 this.addRow({
+                    Aviao: calculaProximidadeAeroporto(raio),
                     Raio: this.avinhao.Raio,
                     Angulo: this.avinhao.Angulo,
                     X: parseFloat(novoX.toFixed(2)),
-                    Y: parseFloat(novoY.toFixed(2))
+                    Y: parseFloat(novoY.toFixed(2)),
+                    Velocidade: this.avinhao.Velocidade
                 });
                 //Setamos os valores nos mapas
                 debugger;
@@ -142,6 +150,9 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         if (!avinhaoSelected || avinhaoSelected == null) {
             alert("Você precisa selecionar um avião na tabela para mover.");
         } else {
+            debugger;
+            if (!isValidToAdd(Number($scope.avinhao.XMover), Number($scope.avinhao.YMover)))
+                return;
             var y = avinhaoSelected.Y;
             var x = avinhaoSelected.X;
             var canvas = document.getElementById("canvas");
@@ -174,6 +185,10 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 //Por fim, setamos os novos valores de X e Y na tabela
                 avinhaoSelected.X = $scope.avinhao.XMover;
                 avinhaoSelected.Y = $scope.avinhao.YMover;
+                avinhaoSelected.Angulo = calculaAngulo($scope.avinhao.XMover, $scope.avinhao.YMover);
+                avinhaoSelected.Raio = calculaRaio($scope.avinhao.XMover, $scope.avinhao.YMover);
+                avinhaoSelected.Aviao = calculaProximidadeAeroporto(avinhaoSelected.Raio);
+                removerElementosLista(Number($scope.avinhao.XMover), Number($scope.avinhao.YMover));
             }
         }
     }
@@ -255,18 +270,25 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 var centroImgY = img.height / 2;
                 var imgX = Math.floor(ajusteX - centroImgX)
                 var imgY = Math.floor(ajusteY - centroImgY);
-                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o
-                // aviao antigo
-                ctx.fillRect(imgX, imgY, 50, 30);
+
                 //Pegamos o valor puro de Y, pois para os calculos, não precisamos do tratamento para o canvas
                 var escalarX = x * (Number($scope.avinhao.XEscala) / 100);
                 var escalarY = Number(avinhaoSelected.Y) * (Number($scope.avinhao.YEscala) / 100);
+                //Verificamos se é valido para adicionarmos
+                if (!isValidToAdd(escalarX, escalarY))
+                    return;
+
+                //No momento em que temos as medidas da imagem, desenhamos um retangulo verde em cima, afim de apagar o
+                // aviao antigo
+                ctx.fillRect(imgX, imgY, 50, 30);
                 $scope.setAvinhaoMapa(escalarX, escalarY);
                 //Por fim, setamos os novos valores de X e Y na tabela
                 avinhaoSelected.X = escalarX;
                 avinhaoSelected.Y = escalarY;
                 avinhaoSelected.Angulo = calculaAngulo(escalarX, escalarY);
                 avinhaoSelected.Raio = calculaRaio(escalarX, escalarY);
+                avinhaoSelected.Aviao = calculaProximidadeAeroporto(avinhaoSelected.Raio);
+                removerElementosLista(escalarX, escalarY);
             }
         }
     }
@@ -275,7 +297,6 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
         if (!avinhaoSelected || avinhaoSelected == null) {
             alert("Você precisa selecionar um avião na tabela para rotacionar.");
         } else {
-            debugger;
             var xTarget = Number(avinhaoSelected.X);
             var yTarget = Number(avinhaoSelected.Y);
 
@@ -283,7 +304,7 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             var xRotacionar = Number($scope.avinhao.XRotacao);
             var yRotacionar = Number($scope.avinhao.YRotacao);
             var anguloRotacionar = degreesToRadians(Number($scope.avinhao.AnguloRotacao))
-            //$scope.avinhao.AnguloRotacao / (180 / Math.PI);
+                //$scope.avinhao.AnguloRotacao / (180 / Math.PI);
 
             //Para calcularmos a rotação, precisamos subtrair o valor que temos pelo valor alvo
             var xDif = xTarget - xRotacionar;
@@ -297,12 +318,21 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
             xNew = xNew + xRotacionar;
             yNew = yNew + yRotacionar;
 
+            if (!isValidToAdd(xNew, yNew))
+                return;
+
+
             xNew = Math.round(xNew);
             yNew = Math.round(yNew);
 
             //Setamos os novos valores de X e Y na tabela
             avinhaoSelected.X = xNew;
             avinhaoSelected.Y = yNew;
+            var novoAngulo = calculaAngulo(xNew, yNew);
+            var novoRaio = calculaRaio(xNew, yNew);
+            avinhaoSelected.Angulo = novoAngulo;
+            avinhaoSelected.Raio = novoRaio;
+            avinhaoSelected.Aviao = calculaProximidadeAeroporto(novoRaio);
 
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
@@ -331,8 +361,44 @@ app.controller('comandoCtrl', ['$scope', '$filter', function ($scope, $filter) {
                 // aviao antigo
                 ctx.fillRect(imgX, imgY, 50, 30);
                 $scope.setAvinhaoMapa(xNew, yNew);
+                removerElementosLista(xNew, yNew);
             }
         }
+    }
+
+    function removerElementosLista(x, y) {
+        avinhoes.forEach(function (entry) {
+            if (entry.X === x && entry.Y === y)
+                var index = avinhoes.indexOf(entry);
+            avinhoes.splice(index, 1);
+        });
+    }
+
+    function isValidToAdd(x, y) {
+        return true;
+        // var avinhaoAddX = Number(x);
+        // var avinhaoAddY = Number(y);
+        // for (var i = 0; i < avinhoes.length; i++) {
+        //     if (avinhaoAddX && avinhaoAddY)
+        //         if ((avinhaoAddX <= Number(avinhoes[i].X) + 50 && avinhaoAddX >= Number(avinhoes[i].X) - 50) &&
+        //             (avinhaoAddY <= Number(avinhoes[i].Y) + 30 && avinhaoAddY >= Number(avinhoes[i].Y) - 30)) {
+        //             //Cancelamos a ação de adicionar o avião, caso o mesmo esteja fora de uma distancia segura do anteriormente adicionado.
+        //             alert("Você precisa adicionar um avião a uma distância segura do outro.");
+        //             return false;
+        //         }
+        // }
+
+        // return true;
+    }
+
+    function calculaProximidadeAeroporto(raio) {
+        if ($scope.avinhao.ProximidadeAvinhao && Number($scope.avinhao.ProximidadeAvinhao) > 0) {
+            var parametroProximidade = Number($scope.avinhao.ProximidadeAvinhao);
+            if (raio <= parametroProximidade)
+                return "Sim";
+            return "Não";
+        }
+        return "Não";
     }
 
 }]);

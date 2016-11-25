@@ -1,7 +1,7 @@
 <div ng-controller="comandoCtrl" layout="column" layout-align=" none" ng-init="inicializarCampos();">
     <div layout="row" layout-align="start top" style="margin-top: 30px; height: 40px;">
         <div style="width: 105px;" flex="30">
-            <md-radio-group ng-model="avinhao.Coordenadas" ng-init="cartesiana" style="width:30px;" ng-change="onSelectRadio(avinhao.coordenadas)">
+            <md-radio-group ng-model="avinhao.Coordenadas" ng-init="cartesiana" style="width:30px;" ng-change="onSelectRadio(avinhao.Coordenadas)">
                 <md-radio-button value="cartesiana">Cartesiana</md-radio-button>
             </md-radio-group>
         </div>
@@ -16,7 +16,7 @@
     </div>
     <div layout="row" layout-align="start top" style="margin-top: 15px">
         <div flex="30">
-            <md-radio-group ng-model="avinhao.Coordenadas" ng-change="onSelectRadio(avinhao.coordenadas)">
+            <md-radio-group ng-model="avinhao.Coordenadas" ng-change="onSelectRadio(avinhao.Coordenadas)">
                 <md-radio-button value="polar">Polar</md-radio-button>
             </md-radio-group>
         </div>
@@ -39,6 +39,10 @@
             <md-input-container style="width: 80px; margin-top: -13px">
                 <label>Direção</label>
                 <input name="angulo" ng-model="avinhao.Direcao" id="direcao">
+            </md-input-container>
+            <md-input-container style="width: 80px; margin-top: -13px">
+                <label>Proximidade Aeroporto</label>
+                <input name="angulo" ng-model="avinhao.ProximidadeAvinhao" id="proximidade">
             </md-input-container>
     </div>
     <div style="width: 100px">
@@ -84,7 +88,7 @@
         <table st-table="rowCollection" class="table table-bordered">
             <thead class="thead-inverse">
                 <tr>
-                    <th st-sort="Aviao">Avião</th>
+                    <th st-sort="Aviao">Avião Próximo aeroporto</th>
                     <th st-sort="X">X</th>
                     <th st-sort="Y">Y</th>
                     <th st-sort="Raio">Raio</th>
